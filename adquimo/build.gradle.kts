@@ -1,5 +1,6 @@
 plugins {
     id("com.android.library")
+    id("maven-publish")
     alias(libs.plugins.kotlin.android)
 }
 
@@ -32,6 +33,16 @@ android {
 
     lint {
         targetSdk = 34
+    }
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
     }
 }
 
