@@ -1,0 +1,86 @@
+# Directorio de compilación
+/build/
+/adquimo
+/app
+/app/build/
+/.gradle/
+/.idea/
+
+# Configuración de Android Studio
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+/.idea/compiler.xml
+/.idea/vcs.xml
+/.idea/dictionaries
+/.idea/jsLibraryMappings.xml
+/.idea/codestyles/
+.idea/gradle.xml
+/.idea/gradle/
+
+# Archivos de Gradle
+.gradle/
+/build/
+/local.properties
+/.gradle/
+/gradle/
+/gradlew
+/gradlew.bat
+/gradle-wrapper.jar
+/gradle-wrapper.properties
+
+# Archivos de compilación
+/build/
+/app/build/
+
+# Archivos de empaquetado
+*.jar
+*.war
+*.ear
+
+# Configuración del sistema operativo
+.DS_Store
+*.swp
+*.swo
+*.swn
+
+# Archivos de Log
+*.log
+
+# Archivos de Android
+*.apk
+*.ap_
+*.dex
+
+# Archivos de firma
+*.keystore
+
+# Generado por Android Studio
+captures/
+.externalNativeBuild/
+
+# Archivos de distribución
+/outputs/
+/releases/
+
+# Archivos de configuración local (Mac/Linux/Windows)
+.idea/
+/.gradle/
+/local.properties
+*.iml
+/.vscode/
+/.env
+/.editorconfig
+
+# Caches de Gradle
+**/build/
+
+# Archivos de prueba
+.gradle-test/
+
+# Archivos generados de Android Lint
+/lint/reports/
+/lint/results/
