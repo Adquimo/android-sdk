@@ -1,6 +1,5 @@
 # Directorio de compilación
 /build/
-/adquimo
 /app
 /app/build/
 /.gradle/
