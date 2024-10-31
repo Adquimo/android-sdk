@@ -38,15 +38,15 @@ class MainActivity : AppCompatActivity() {
 
         // Set up the click listener
         myButton.setOnClickListener { requestAndShow() }
-
         init();
     }
 
     private fun init() {
+        Adquimo.initialize(this@MainActivity, "b506cf57-65f3-4feb-bdf0-66e7ca1ef16f")
+
         val backgroundScope = CoroutineScope(Dispatchers.IO)
         backgroundScope.launch {
             MobileAds.initialize(this@MainActivity) {}
-            Adquimo.initialize(this@MainActivity, "b506cf57-65f3-4feb-bdf0-66e7ca1ef16f")
         }
     }
 

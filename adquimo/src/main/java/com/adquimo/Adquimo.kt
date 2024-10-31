@@ -1,14 +1,14 @@
 package com.adquimo
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import com.adquimo.core.api.Client
-import com.adquimo.core.repository.ConfigRepository
 import com.adquimo.core.device.HDevice
 import com.adquimo.core.logging.Logs
 import com.adquimo.core.model.Device
 import com.adquimo.core.utils.Cache
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class Adquimo {
@@ -16,8 +16,14 @@ class Adquimo {
     companion object {
         private const val TAG = "TAGD-Adquimo"
 
-        @JvmStatic
-        suspend fun initialize(context: Context, appId: String) {
+        fun initialize(context: Context, appId: String) {
+            // Launch a coroutine on the IO dispatcher
+            CoroutineScope(Dispatchers.IO).launch {
+                initializeSuspend(context, appId)
+            }
+        }
+
+        private suspend fun initializeSuspend(context: Context, appId: String) {
             // Logic for initialization goes here
             Log.d(TAG, "Adquimo initialized with appId: $appId and context: $context")
 
@@ -34,9 +40,6 @@ class Adquimo {
                 // Proceed with device info extraction
                 val device = HDevice(context)
 
-                /* CoroutineScope(Dispatchers.IO).launch {
-                               register(device.metadata())
-                           } */
                 register(context, appId, device.metadata())
                 return
             }
