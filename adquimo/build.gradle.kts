@@ -43,7 +43,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "com.github.adquimo"
             artifactId = "android-sdk"
-            version = "1.0.1"
+            version = "1.0.2"
 
             // Include the release component from the library module
             afterEvaluate {
