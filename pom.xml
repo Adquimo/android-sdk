@@ -5,6 +5,6 @@
     <groupId>com.github.adquimo</groupId>
     <artifactId>android-sdk</artifactId>
     <version>1.0.0</version>
-    <packaging>aar</packaging>
+    <packaging>pom</packaging>
     <description>Adquimo Android</description>
 </project>
