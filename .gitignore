@@ -1,5 +1,4 @@
 # Directorio de compilación
-/build/
 /app
 /app/build/
 /.gradle/
@@ -22,7 +21,6 @@
 
 # Archivos de Gradle
 .gradle/
-/build/
 /local.properties
 /.gradle/
 /gradle/
@@ -31,9 +29,6 @@
 /gradle-wrapper.jar
 /gradle-wrapper.properties
 
-# Archivos de compilación
-/build/
-/app/build/
 
 # Archivos de empaquetado
 *.jar
