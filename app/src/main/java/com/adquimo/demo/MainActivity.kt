@@ -8,15 +8,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.adquimo.Adquimo
+import com.adquimo.ads.AppOpenAd
 import com.adquimo.ads.InterstitialAd
+import com.adquimo.ads.RewardedAd
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.rewarded.RewardItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var appOpenAd: AppOpenAd
     private lateinit var interstitialAd: InterstitialAd
+    private lateinit var rewardedAd: RewardedAd
 
     companion object {
         private const val TAG = "TAGD-MainActivity"
@@ -32,12 +37,17 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val myButton: Button = findViewById(R.id.button)
+        val btAppOpen: Button = findViewById(R.id.ad_app_open)
+        val btInterstitial: Button = findViewById(R.id.ad_interstitial)
+        val btRewarded: Button = findViewById(R.id.ad_rewarded)
 
         // Adquimo.initialize(this, "ADQUIMO_APP_ID")
 
         // Set up the click listener
-        myButton.setOnClickListener { requestAndShow() }
+        btAppOpen.setOnClickListener { requestAndShowAppOpen() }
+        btInterstitial.setOnClickListener { requestAndShowInterstitial() }
+        btRewarded.setOnClickListener { requestAndShowRewarded() }
+
         init();
     }
 
@@ -50,9 +60,46 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestAndShow() {
+    private fun requestAndShowAppOpen() {
+        appOpenAd = AppOpenAd(this, "ca-app-pub-3940256099942544/9257395921", false)
+
+        appOpenAd.setAdListener(object : AppOpenAd.AdListener {
+            override fun onAdLoaded() {
+                Log.d(TAG, "Ad loaded successfully")
+                appOpenAd.showAd()
+            }
+
+            override fun onAdFailedToLoad(errorMessage: String) {
+                Log.d(TAG, "Ad failed to load: $errorMessage")
+            }
+
+            override fun onAdClicked() {
+                Log.d(TAG, "Ad clicked")
+            }
+
+            override fun onAdDismissed() {
+                Log.d(TAG, "Ad dismissed")
+            }
+
+            override fun onAdFailedToShow(errorMessage: String) {
+                Log.d(TAG, "Ad failed to show: $errorMessage")
+            }
+
+            override fun onAdImpression() {
+                Log.d(TAG, "Ad impression recorded")
+            }
+
+            override fun onAdShowed() {
+                Log.d(TAG, "Ad showed")
+            }
+        })
+
+        appOpenAd.loadAd()
+    }
+
+    private fun requestAndShowInterstitial() {
         interstitialAd = InterstitialAd(this, "ca-app-pub-3940256099942544/1033173712")
-        
+
         interstitialAd.setAdListener(object : InterstitialAd.AdListener {
             override fun onAdLoaded() {
                 Log.d(TAG, "Ad loaded successfully")
@@ -86,4 +133,47 @@ class MainActivity : AppCompatActivity() {
 
         interstitialAd.loadAd()
     }
+
+    private fun requestAndShowRewarded() {
+        rewardedAd = RewardedAd(this, "ca-app-pub-3940256099942544/5224354917")
+
+        rewardedAd.setAdListener(object : RewardedAd.AdListener {
+            override fun onAdLoaded() {
+                Log.d(TAG, "Ad loaded successfully")
+                rewardedAd.showAd()
+            }
+
+            override fun onAdFailedToLoad(errorMessage: String) {
+                Log.d(TAG, "Ad failed to load: $errorMessage")
+            }
+
+            override fun onAdClicked() {
+                Log.d(TAG, "Ad clicked")
+            }
+
+            override fun onAdDismissed() {
+                Log.d(TAG, "Ad dismissed")
+            }
+
+            override fun onAdFailedToShow(errorMessage: String) {
+                Log.d(TAG, "Ad failed to show: $errorMessage")
+            }
+
+            override fun onAdImpression() {
+                Log.d(TAG, "Ad impression recorded")
+            }
+
+            override fun onAdShowed() {
+                Log.d(TAG, "Ad showed")
+            }
+
+            override fun onAdRewardReceived(rewardItem: RewardItem?) {
+                super.onAdRewardReceived(rewardItem)
+                Log.d(TAG, "Ad Reward Received $rewardItem")
+            }
+        })
+
+        rewardedAd.loadAd()
+    }
+
 }

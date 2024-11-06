@@ -9,6 +9,7 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/hello_world"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
@@ -17,13 +18,37 @@
         android:textSize="24sp"
         />
 
-    <Button
-        android:id="@+id/button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Request and Show Interstitial"
-        android:layout_marginHorizontal="32dp"
-        android:layout_centerInParent="true"
-        tools:ignore="HardcodedText" />
+        android:orientation="vertical"
+        android:layout_below="@+id/hello_world"
+        android:layout_marginTop="32dp"
+        android:layout_marginHorizontal="32dp">
+
+        <Button
+            android:id="@+id/ad_app_open"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="App Open Ad"
+            tools:ignore="HardcodedText"
+            android:backgroundTint="@color/adquimo"/>
+
+        <Button
+            android:id="@+id/ad_interstitial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Interstitial Ad"
+            tools:ignore="HardcodedText"
+            android:backgroundTint="@color/adquimo"/>
+
+        <Button
+            android:id="@+id/ad_rewarded"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rewarded Ad"
+            tools:ignore="HardcodedText"
+            android:backgroundTint="@color/adquimo"/>
+    </LinearLayout>
 
 </RelativeLayout>

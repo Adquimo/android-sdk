@@ -4,23 +4,18 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.util.Log
-import android.widget.ImageButton
-import com.adquimo.Adquimo
-import com.adquimo.Adquimo.Companion
-import com.adquimo.R
 import com.adquimo.core.logging.Logs
-import com.adquimo.core.model.Device
-import com.adquimo.core.utils.Cache
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import org.json.JSONObject
+import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
-class InterstitialAd(private val context: Context, private val adUnitId: String) {
+class RewardedAd(private val context: Context, private val adUnitId: String) {
 
-    private var mInterstitialAd: com.google.android.gms.ads.interstitial.InterstitialAd? = null
+    private var mRewardedAd: RewardedAd? = null
     private var adListener: AdListener? = null
     private var fullScreenDialog: Dialog? = null
     private var requestId: String? = null
@@ -29,7 +24,7 @@ class InterstitialAd(private val context: Context, private val adUnitId: String)
     private var hasAdquimoAd = false
 
     companion object {
-        private const val TAG = "TAGD-InterstitialAd"
+        private const val TAG = "TAGD-RewardedAd"
     }
 
     fun setAdListener(listener: AdListener) {
@@ -42,41 +37,20 @@ class InterstitialAd(private val context: Context, private val adUnitId: String)
 
         target = 0
 
-        requestId = Logs().requestAd(com.adquimo.core.model.AdRequest(adUnitId, "interstitial"))
+        requestId = Logs().requestAd(com.adquimo.core.model.AdRequest(adUnitId, "rewarded"))
 
-        Log.d(TAG, "requested interstitial, requestId $requestId")
+        Log.d(TAG, "requested rewarded, requestId $requestId")
 
-        // requestAdquimo()
         requestAdMob()
     }
 
-    private fun requestAdquimo() {
-        // TODO: Trigger request ad
-
-        hasAdquimoAd = true
-
-        fullScreenDialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen).apply {
-            setContentView(R.layout.ad_interstitial)
-            setCancelable(false)
-
-            findViewById<ImageButton>(R.id.close).setOnClickListener {
-                fullScreenDialog?.takeIf { it.isShowing }?.dismiss().also {
-                    triggerEvent("onAdDismissed")
-                }
-            }
-        }
-
-        // Set up ad content, video/image, redirect, etc.
-        triggerEvent("onAdLoaded")
-    }
-
     private fun requestAdMob() {
-        if (mInterstitialAd != null) return
+        if (mRewardedAd != null) return
 
         val adRequest = AdRequest.Builder().build()
-        com.google.android.gms.ads.interstitial.InterstitialAd.load(context, adUnitId, adRequest, object : InterstitialAdLoadCallback() {
-            override fun onAdLoaded(interstitialAd: com.google.android.gms.ads.interstitial.InterstitialAd) {
-                mInterstitialAd = interstitialAd
+        RewardedAd.load(context, adUnitId, adRequest, object : RewardedAdLoadCallback() {
+            override fun onAdLoaded(rewardedAd: RewardedAd) {
+                mRewardedAd = rewardedAd
                 // Log.i(TAG, "onAdLoaded")
                 setupAdCallbacks()
                 triggerEvent("onAdLoaded")
@@ -84,40 +58,63 @@ class InterstitialAd(private val context: Context, private val adUnitId: String)
 
             override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                 // Log.d(TAG, loadAdError.toString())
-                mInterstitialAd = null
-                triggerEvent("onAdFailedToLoad", loadAdError.message)
+                mRewardedAd = null
+                triggerEvent("onAdFailedToLoad", message = loadAdError.message)
             }
         })
     }
 
     private fun setupAdCallbacks() {
-        mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-            override fun onAdClicked() = triggerEvent("onAdClicked")
+        mRewardedAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+            override fun onAdClicked() {
+                // Called when a click is recorded for an ad.
+                // Log.d(TAG, "Ad was clicked.")
+                triggerEvent("onAdClicked")
+            }
+
             override fun onAdDismissedFullScreenContent() {
+                // Called when ad is dismissed.
+                // Set the ad reference to null so you don't show the ad a second time.
                 // Log.d(TAG, "Ad dismissed fullscreen content.")
-                mInterstitialAd = null
+                mRewardedAd = null
                 triggerEvent("onAdDismissed")
             }
-            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                // Log.e(TAG, "Ad failed to show fullscreen content.")
-                mInterstitialAd = null
-                triggerEvent("onAdFailedToShow", adError.message)
+
+            override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                // Called when ad fails to show.
+                // Log.e(TAG, "Ad failed to show fullscreen content. $p0")
+                mRewardedAd = null
+                triggerEvent("onAdFailedToShow", message = p0.message)
             }
-            override fun onAdImpression() = triggerEvent("onAdImpression")
-            override fun onAdShowedFullScreenContent() = triggerEvent("onAdShowed")
+
+            override fun onAdImpression() {
+                // Called when an impression is recorded for an ad.
+                // Log.d(TAG, "Ad recorded an impression.")
+                triggerEvent("onAdImpression")
+            }
+
+            override fun onAdShowedFullScreenContent() {
+                // Called when ad is shown.
+                // Log.d(TAG, "Ad showed fullscreen content.")
+                triggerEvent("onAdShowed")
+            }
         }
     }
 
     fun showAd() {
         when {
-            target == 0 && mInterstitialAd != null -> mInterstitialAd?.show(context as Activity)
+            target == 0 && mRewardedAd != null -> mRewardedAd?.show(context as Activity) { rewardItem ->
+                // Log.d(TAG, "User earned the reward.")
+                triggerEvent("onAdReward", rewardItem = rewardItem)
+            }
+
             target == 1 -> Log.d(TAG, "Show random")
             hasAdquimoAd -> fullScreenDialog?.show().also { triggerEvent("onAdShowed") }
             else -> Log.d(TAG, "The interstitial ad wasn't ready yet.")
         }
     }
 
-    private fun triggerEvent(kind: String, message: String = "") {
+    private fun triggerEvent(kind: String, message: String = "", rewardItem: RewardItem? = null) {
             // TODO: This control via Cache.config.logs.adCallbacks == true
             /* if (requestId != null) {
                 Logs().adCallback(com.adquimo.core.model.AdCallback(requestId!!, kind))
@@ -132,6 +129,7 @@ class InterstitialAd(private val context: Context, private val adUnitId: String)
                 "onAdFailedToShow" -> it.onAdFailedToShow(message)
                 "onAdImpression" -> it.onAdImpression()
                 "onAdShowed" -> it.onAdShowed()
+                "onAdReward" -> it.onAdRewardReceived(rewardItem)
             }
         }
     }
@@ -144,5 +142,6 @@ class InterstitialAd(private val context: Context, private val adUnitId: String)
         fun onAdFailedToShow(errorMessage: String) {}
         fun onAdImpression() {}
         fun onAdShowed() {}
+        fun onAdRewardReceived(rewardItem: RewardItem?) {}
     }
 }

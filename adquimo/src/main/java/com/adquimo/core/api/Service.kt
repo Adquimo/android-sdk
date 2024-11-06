@@ -31,6 +31,7 @@ interface Service {
         @Body callback: AdCallback
     ): Response<ResponseBody>
 
+
     // Logs User
     @POST("logs/user/activity")
     suspend fun logActivity(
