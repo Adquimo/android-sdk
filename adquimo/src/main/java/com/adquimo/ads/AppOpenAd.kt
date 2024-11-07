@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.util.Log
+import com.adquimo.ads.InterstitialAd.Listener
 import com.adquimo.core.logging.Logs
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -176,7 +177,13 @@ class AppOpenAd(private val context: Context, private val adUnitId: String, priv
         }
     }
 
-    interface AdListener {
+    fun destroy() {
+        if(isShowingAd || isLoadingAd) return
+
+        mAppOpenAd = null
+    }
+
+    interface Listener {
         fun onAdLoaded() {}
         fun onAdFailedToLoad(errorMessage: String) {}
         fun onAdClicked() {}
@@ -185,6 +192,37 @@ class AppOpenAd(private val context: Context, private val adUnitId: String, priv
         fun onAdImpression() {}
         fun onAdShowed() {}
     }
+
+    open class AdListener : Listener {
+        override fun onAdLoaded() {
+            // Default empty behavior
+        }
+
+        override fun onAdFailedToLoad(errorMessage: String) {
+            // Default empty behavior
+        }
+
+        override fun onAdClicked() {
+            // Default empty behavior
+        }
+
+        override fun onAdDismissed() {
+            // Default empty behavior
+        }
+
+        override fun onAdFailedToShow(errorMessage: String) {
+            // Default empty behavior
+        }
+
+        override fun onAdImpression() {
+            // Default empty behavior
+        }
+
+        override fun onAdShowed() {
+            // Default empty behavior
+        }
+    }
+
 
     /** Utility method to check if ad was loaded more than n hours ago. */
     private fun wasLoadTimeLessThanNHoursAgo(numHours: Long): Boolean {
@@ -197,4 +235,5 @@ class AppOpenAd(private val context: Context, private val adUnitId: String, priv
     private fun isAdAvailable(): Boolean {
         return mAppOpenAd != null && wasLoadTimeLessThanNHoursAgo(4)
     }
+
 }

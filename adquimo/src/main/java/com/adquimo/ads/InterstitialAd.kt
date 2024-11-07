@@ -5,18 +5,15 @@ import android.app.Dialog
 import android.content.Context
 import android.util.Log
 import android.widget.ImageButton
-import com.adquimo.Adquimo
-import com.adquimo.Adquimo.Companion
 import com.adquimo.R
+import com.adquimo.ads.RewardedAd.Listener
 import com.adquimo.core.logging.Logs
-import com.adquimo.core.model.Device
-import com.adquimo.core.utils.Cache
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import org.json.JSONObject
+import com.google.android.gms.ads.rewarded.RewardItem
 
 class InterstitialAd(private val context: Context, private val adUnitId: String) {
 
@@ -117,6 +114,10 @@ class InterstitialAd(private val context: Context, private val adUnitId: String)
         }
     }
 
+    fun destroy() {
+        mInterstitialAd = null
+    }
+
     private fun triggerEvent(kind: String, message: String = "") {
             // TODO: This control via Cache.config.logs.adCallbacks == true
             /* if (requestId != null) {
@@ -136,7 +137,7 @@ class InterstitialAd(private val context: Context, private val adUnitId: String)
         }
     }
 
-    interface AdListener {
+    interface Listener {
         fun onAdLoaded() {}
         fun onAdFailedToLoad(errorMessage: String) {}
         fun onAdClicked() {}
@@ -144,5 +145,35 @@ class InterstitialAd(private val context: Context, private val adUnitId: String)
         fun onAdFailedToShow(errorMessage: String) {}
         fun onAdImpression() {}
         fun onAdShowed() {}
+    }
+
+    open class AdListener : Listener {
+        override fun onAdLoaded() {
+            // Default empty behavior
+        }
+
+        override fun onAdFailedToLoad(errorMessage: String) {
+            // Default empty behavior
+        }
+
+        override fun onAdClicked() {
+            // Default empty behavior
+        }
+
+        override fun onAdDismissed() {
+            // Default empty behavior
+        }
+
+        override fun onAdFailedToShow(errorMessage: String) {
+            // Default empty behavior
+        }
+
+        override fun onAdImpression() {
+            // Default empty behavior
+        }
+
+        override fun onAdShowed() {
+            // Default empty behavior
+        }
     }
 }

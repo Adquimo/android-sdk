@@ -11,9 +11,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-class Adquimo {
+object Adquimo {
 
-    companion object {
         private const val TAG = "TAGD-Adquimo"
 
         fun initialize(context: Context, appId: String) {
@@ -73,5 +72,4 @@ class Adquimo {
                 Log.d(TAG, "Failed to register device: ${response.code()}")
             }
         }
-    }
 }

@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     private fun requestAndShowAppOpen() {
         appOpenAd = AppOpenAd(this, "ca-app-pub-3940256099942544/9257395921", false)
 
-        appOpenAd.setAdListener(object : AppOpenAd.AdListener {
+        appOpenAd.setAdListener(object : AppOpenAd.AdListener() {
             override fun onAdLoaded() {
                 Log.d(TAG, "Ad loaded successfully")
                 appOpenAd.showAd()
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
     private fun requestAndShowInterstitial() {
         interstitialAd = InterstitialAd(this, "ca-app-pub-3940256099942544/1033173712")
 
-        interstitialAd.setAdListener(object : InterstitialAd.AdListener {
+        interstitialAd.setAdListener(object : InterstitialAd.AdListener() {
             override fun onAdLoaded() {
                 Log.d(TAG, "Ad loaded successfully")
                 interstitialAd.showAd()
@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
     private fun requestAndShowRewarded() {
         rewardedAd = RewardedAd(this, "ca-app-pub-3940256099942544/5224354917")
 
-        rewardedAd.setAdListener(object : RewardedAd.AdListener {
+        rewardedAd.setAdListener(object : RewardedAd.AdListener() {
             override fun onAdLoaded() {
                 Log.d(TAG, "Ad loaded successfully")
                 rewardedAd.showAd()

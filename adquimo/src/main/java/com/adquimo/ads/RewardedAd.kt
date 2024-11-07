@@ -109,9 +109,19 @@ class RewardedAd(private val context: Context, private val adUnitId: String) {
             }
 
             target == 1 -> Log.d(TAG, "Show random")
+
             hasAdquimoAd -> fullScreenDialog?.show().also { triggerEvent("onAdShowed") }
-            else -> Log.d(TAG, "The interstitial ad wasn't ready yet.")
+
+            else -> Log.d(TAG, "The interstitial ad wasn't ready yet.").also { triggerEvent("onAdFailedToShow", "The interstitial ad wasn't ready yet.") }
         }
+    }
+
+    fun isAvailable(): Boolean {
+        return mRewardedAd != null || hasAdquimoAd;
+    }
+
+    fun destroy() {
+        mRewardedAd = null
     }
 
     private fun triggerEvent(kind: String, message: String = "", rewardItem: RewardItem? = null) {
@@ -134,7 +144,7 @@ class RewardedAd(private val context: Context, private val adUnitId: String) {
         }
     }
 
-    interface AdListener {
+    interface Listener {
         fun onAdLoaded() {}
         fun onAdFailedToLoad(errorMessage: String) {}
         fun onAdClicked() {}
@@ -143,5 +153,39 @@ class RewardedAd(private val context: Context, private val adUnitId: String) {
         fun onAdImpression() {}
         fun onAdShowed() {}
         fun onAdRewardReceived(rewardItem: RewardItem?) {}
+    }
+
+    open class AdListener : Listener {
+        override fun onAdLoaded() {
+            // Default empty behavior
+        }
+
+        override fun onAdFailedToLoad(errorMessage: String) {
+            // Default empty behavior
+        }
+
+        override fun onAdClicked() {
+            // Default empty behavior
+        }
+
+        override fun onAdDismissed() {
+            // Default empty behavior
+        }
+
+        override fun onAdFailedToShow(errorMessage: String) {
+            // Default empty behavior
+        }
+
+        override fun onAdImpression() {
+            // Default empty behavior
+        }
+
+        override fun onAdShowed() {
+            // Default empty behavior
+        }
+
+        override fun onAdRewardReceived(rewardItem: RewardItem?) {
+            // Default empty behavior
+        }
     }
 }
