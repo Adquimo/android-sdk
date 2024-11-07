@@ -117,7 +117,7 @@ class RewardedAd(private val context: Context, private val adUnitId: String) {
     }
 
     fun isAvailable(): Boolean {
-        return mRewardedAd != null || hasAdquimoAd;
+        return (target == 0 && mRewardedAd != null) || hasAdquimoAd;
     }
 
     fun destroy() {
@@ -126,9 +126,9 @@ class RewardedAd(private val context: Context, private val adUnitId: String) {
 
     private fun triggerEvent(kind: String, message: String = "", rewardItem: RewardItem? = null) {
             // TODO: This control via Cache.config.logs.adCallbacks == true
-            /* if (requestId != null) {
+            if (requestId != null) {
                 Logs().adCallback(com.adquimo.core.model.AdCallback(requestId!!, kind))
-            } */
+            }
 
             adListener?.let {
             when (kind) {

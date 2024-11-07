@@ -160,9 +160,9 @@ class AppOpenAd(private val context: Context, private val adUnitId: String, priv
 
     private fun triggerEvent(kind: String, message: String = "") {
             // TODO: This control via Cache.config.logs.adCallbacks == true
-            /* if (requestId != null) {
+            if (requestId != null) {
                 Logs().adCallback(com.adquimo.core.model.AdCallback(requestId!!, kind))
-            } */
+            }
 
             adListener?.let {
             when (kind) {

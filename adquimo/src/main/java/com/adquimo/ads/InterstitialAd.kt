@@ -114,15 +114,19 @@ class InterstitialAd(private val context: Context, private val adUnitId: String)
         }
     }
 
+    fun isAvailable(): Boolean {
+        return (target == 0 && mInterstitialAd != null) || hasAdquimoAd;
+    }
+
     fun destroy() {
         mInterstitialAd = null
     }
 
     private fun triggerEvent(kind: String, message: String = "") {
             // TODO: This control via Cache.config.logs.adCallbacks == true
-            /* if (requestId != null) {
+            if (requestId != null) {
                 Logs().adCallback(com.adquimo.core.model.AdCallback(requestId!!, kind))
-            } */
+            }
 
             adListener?.let {
             when (kind) {
